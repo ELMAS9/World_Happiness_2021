@@ -1,0 +1,163 @@
+---
+title: "Tanımlayıcı İstatistik"
+author: "H. Kemal İlter"
+date: "21.10.2021"
+output: 
+  html_document:
+    css: styles.css
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+# libraries
+library(tidyverse)
+library(ggplot2)
+library(mosaic)
+library(e1071)
+require(tikzdevice)
+theme_set(theme_classic())
+```
+
+## Temel İstatistik
+
+*Kullanılan veri kümesi*
+```{r}
+veri <- read_csv('wh_report_2021.csv')
+veri
+# summary(veri)
+```
+
+**Ortalama (Mean)**
+```{r veri}
+mean(veri$`Ladder score`)
+```
+
+**Medyan (Median)**
+```{r}
+median(veri$`Ladder score`)
+```
+
+**Mod (Mode)**
+```{r echo=FALSE}
+# Create the function.
+getmode <- function(v) {
+   uniqv <- unique(v)
+   uniqv[which.max(tabulate(match(v, uniqv)))]
+}
+# Create the vector with numbers.
+v <- c(veri$`Ladder score`)
+# Calculate the mode using the user function.
+mod <- getmode(v)
+print(mod)
+```
+
+**Yüzde değer (Percentile)**
+```{r}
+quantile(veri$`Ladder score`, c(.32, .57, .98))
+```
+
+**Çeyrek değer (Quartile)**
+```{r}
+quantile(veri$`Ladder score`)
+```
+
+**Değişim aralığı (Range)**
+```{r}
+range(veri$`Ladder score`)
+aralik <- max(veri$`Ladder score`) - min(veri$`Ladder score`)
+print(aralik)
+```
+
+**Çeyrekler arası değişim aralığı (Interquartile range)**
+```{r}
+IQR(veri$`Ladder score`)
+```
+
+**Varyans (Variance)**
+```{r}
+var(veri$`Ladder score`)
+```
+
+**Standart sapma (Standard deviation)**
+```{r echo=FALSE}
+sd(veri$`Ladder score`)
+```
+
+**Değişkenlik katsayısı (Coefficient of variation)**
+```{r}
+# Create the function.
+getdk <- function(d) {
+   k <- 100*(sd(d)/mean(d))
+}
+d <- c(veri$`Ladder score`)
+dk <- getdk(d)
+print(dk)
+```
+
+**Çarpıklık (Skewness)**
+```{r}
+skewness(veri$`Ladder score`)
+```
+
+**z Değeri (z-Value)**
+```{r}
+zscore(veri$`Ladder score`)
+```
+
+**Frekans (Frequency)**
+```{r}
+hist(veri$`Ladder score`,plot = FALSE)
+hist(veri$`Ladder score`)
+```
+
+**Stem-and-Leaf Plot**
+```{r}
+stem(veri$`Ladder score`)
+```
+
+**Plot**
+```{r}
+plot(veri$`Ladder score`[1:100],ylim=c(0,10))
+abline(h = c(mean(veri$`Ladder score`),mean(veri$`Ladder score`)+sd(veri$`Ladder score`),mean(veri$`Ladder score`)-sd(veri$`Ladder score`),mean(veri$`Ladder score`)+2*sd(veri$`Ladder score`),mean(veri$`Ladder score`)-2*sd(veri$`Ladder score`)), col = c("red", "blue", "blue", "green", "green"))
+```
+
+**Box plot**
+```{r}
+boxplot(veri$`Ladder score`, horizontal=TRUE)
+```
+
+**Kovaryans**
+```{r}
+cov(veri$`Ladder score`,veri$`Freedom to make life choices`)
+```
+
+**Korelasyon Katsayısı**
+```{r}
+cor(veri$`Ladder score`,veri$`Freedom to make life choices`)
+```
+
+**Popülasyon**
+```{r}
+set.seed(1234)
+df <- data.frame(
+  agirlik=round(rnorm(1000, mean=110, sd=15))
+  )
+summary(df)
+ggplot(df, aes(x=agirlik)) + geom_histogram(binwidth=10)
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
